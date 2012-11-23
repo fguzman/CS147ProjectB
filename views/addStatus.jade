@@ -67,22 +67,24 @@ html
           input#radio-choice-5(type='radio', name='e-radio-choice', value='choice-5')
           label(for='radio-choice-5')
             img(src='/imgs/sad-01.png')
-
-          //- input#radio-choice-6(type='radio', name='e-radio-choice', value='choice-6')
-          //- label(for='radio-choice-6')
-          //-   img(src='/imgs/angel-01.png')
-          //- input#radio-choice-7(type='radio', name='e-radio-choice', value='choice-7')
-          //- label(for='radio-choice-7')
-          //-   img(src='/imgs/devil-01.png')
-          //- input#radio-choice-8(type='radio', name='e-radio-choice', value='choice-8')
-          //- label(for='radio-choice-8')
-          //-   img(src='/imgs/dissapoint-01.png')
-          //- input#radio-choice-9(type='radio', name='e-radio-choice', value='choice-9')
-          //- label(for='radio-choice-9')
-          //-   img(src='/imgs/laugh-01.png')
-          //- input#radio-choice-10(type='radio', name='e-radio-choice', value='choice-10')
-          //- label(for='radio-choice-10')
-          //-   img(src='/imgs/surprised-01.png')
+          input#radio-choice-3(type='radio', name='e-radio-choice', value='choice-3')
+          label(for='radio-choice-3')
+            img(src='/imgs/angry-01.png')
+          input#radio-choice-6(type='radio', name='e-radio-choice', value='choice-6')
+          label(for='radio-choice-6')
+            img(src='/imgs/angel-01.png')
+          input#radio-choice-7(type='radio', name='e-radio-choice', value='choice-7')
+          label(for='radio-choice-7')
+            img(src='/imgs/devil-01.png')
+          input#radio-choice-8(type='radio', name='e-radio-choice', value='choice-8')
+          label(for='radio-choice-8')
+            img(src='/imgs/dissapoint-01.png')
+          input#radio-choice-9(type='radio', name='e-radio-choice', value='choice-9')
+          label(for='radio-choice-9')
+            img(src='/imgs/laugh-01.png')
+          input#radio-choice-10(type='radio', name='e-radio-choice', value='choice-10')
+          label(for='radio-choice-10')
+            img(src='/imgs/surprised-01.png')
           
         center
           label(for='textarea-a')
@@ -91,5 +93,12 @@ html
           input#imageField(type='hidden', name='image', value='')
           label(for='imageFile') Photo 
           input#imageFile(type='file', name='image', accept='image/*', capture='camera', onchange='fileSelected();')
+
+          div(data-role='fieldcontain', data-mini='true')
+          label(for='flip-5') Keep Post Private:
+            select#flip-5(name='flip-5', data-role='slider', data-theme='c', data-track-theme='a')
+              option(value='no') No
+              option(value='yes') Yes
+
 
           
