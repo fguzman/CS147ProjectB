@@ -1,0 +1,59 @@
+!!! 5
+html
+  head
+    title Settings
+    meta(charset='utf-8')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style', content='black')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='/css/jquery.mobile-1.2.0.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='apple-touch-icon', href='/imgs/appicon.png')
+    link(rel='apple-touch-startup-image', href='/imgs/startup.png')
+    script(src='/js/jquery-1.8.2.min.js')
+    script(src='/js/jquery.mobile-1.2.0.js')
+  body
+    #filter(data-role='page')
+      script(type='text/javascript')
+        $(function() {
+        $('#saveBtn').click(function() {
+        $('#settingsForm').submit()
+        })
+        $.get('user-info', function(data) {
+        console.log('got data: '+data)
+        data = JSON.parse(data)
+        $('#name').val(data['name'])
+        $('#email').val(data['email'])
+        $('#pass').val(data['password'])
+        if(data['gender'] == 'f') {
+        $('#radio-female').attr('checked', true).checkboxradio('refresh')
+        } else {
+        $('#radio-male').attr('checked', true).checkboxradio('refresh')
+        }
+        $('#flip-s').val(data['location']).slider('refresh')
+        $('#privacy').val(data['privacy']).selectmenu('refresh')
+        })
+        })
+      div(data-role='header')
+        a(href='global') Cancel
+        h1 Settings
+        a#saveBtn(data-theme='b') Save
+      //
+         /header 
+      div(data-role='content')
+        form#settingsForm(action='save-settings', method='post')
+          div(data-role='fieldcontain')
+            label(for='name') Name:
+            input#name(type='text', name='name')
+            label(for='email') Email:
+            input#email(type='text')
+          div(data-role='fieldcontain')
+            label(for='pass') Password:
+            input#pass(type='password', name='pass')
+          center
+            div
+              a(href='logout', data-role='button', data-theme='a') Logout
+      //
+         /content 
+    //
+       /page 

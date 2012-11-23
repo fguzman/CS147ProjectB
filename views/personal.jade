@@ -1,0 +1,243 @@
+!!! 5
+html
+  head
+    title emochi
+    meta(charset='utf-8')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style', content='black')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='/css/jquery.mobile-1.2.0.css')
+    link(rel='stylesheet', href='/css/style.css')
+    link(rel='apple-touch-icon', href='/imgs/appicon.png')
+    link(rel='apple-touch-startup-image', href='/imgs/startup.png')
+    script(src='/js/jquery-1.8.2.min.js')
+    script(src='/js/jquery.mobile-1.2.0.js')
+    script(src='/js/graphs.js')
+    script(src='http://www.geoplugin.net/javascript.gp')
+  body
+    #one(data-role='page')
+      script(src='/js/d3.v2.js')
+      script(type='text/javascript')
+        function getDayName(day) {
+            if (day == 0) {
+            return 'Sunday';
+            } else if (day == 1) {
+            return 'Monday';
+            } else if (day == 2) {
+            return 'Tuesday';
+            } else if (day == 3) {
+            return 'Wednesday';
+            } else if (day == 4) {
+            return 'Thursday';
+            } else if (day == 5) {
+            return 'Friday';
+            } else if (day == 6) {
+            return 'Saturday';
+            }
+        }
+
+        function getMonthName(month) {
+
+        var monthNames = [ "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December" ];
+
+        return monthNames[month];
+
+        }
+
+        function drawGraphs(statuses) {
+            console.log("statuses: "+JSON.stringify(statuses))
+            var w = 400;
+            var h = 100;
+            var barPadding = 1;
+
+            var svg = d3.select("#emotion-graph")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+            var emotionIndex = { 'excited':0, 'happy':1, 'neutral':2, 'sad':3, 'angry':4, 'angel':5, 'devil':7, 'disappoint':8, 'laugh':9, 'surprised':10}
+            var dataset = [0,0,0,0,0,0,0,0,0,0] 
+            for(var i=0; i < statuses.length; i++) {
+                var curr = statuses[i];
+                dataset[emotionIndex[curr['emotion']]]++;
+            }
+
+            var max = Math.max.apply(null, dataset)
+            var scale = h / max;
+            console.log('scale: '+scale)
+
+            console.log('dataset: '+ JSON.stringify(dataset))
+            svg.selectAll("rect")
+               .data(dataset)
+               .enter()
+               .append("rect")
+               .attr("x", function(d, i) {
+                return i * (w / dataset.length);    })
+               .attr("y", function(d) {
+                  return h - d*scale;  })
+               .attr("width", w / dataset.length - barPadding)
+               .attr("height", function(d) {
+                 return d * scale})
+               .attr('fill', 'orange')
+        }
+
+        function getEmoticon(emotion) {
+              if(emotion=="excited") {
+                  return 'excited-01.png';
+              } else if (emotion=="happy") {
+                  return 'happy-01.png';
+              } else if (emotion=="neutral") {
+                  return 'neutral-01.png';
+              } else if (emotion=="sad") {
+                  return 'sad-01.png';
+              } else if (emotion=="angry") {
+                  return 'angry-01.png';
+              } else if (emotion=="angel") {
+                  return 'angel-01.png';
+              } else if (emotion=="devil") {
+                  return 'devil-01.png';
+              } else if (emotion=="dissapoint") {
+                  return 'dissapoint-01.png';
+              } else if (emotion=="laugh") {
+                  return 'laugh-01.png';
+              } else if (emotion=="surprised") {
+                  return 'surprised-01.png';
+              } else {
+                  return 'blank-01.png' ;
+              }
+        }
+        
+        function simpleDate(date) {
+            var today = new Date();
+            var statusDate = " " + getMonthName(date.getMonth()) + " " + date.getDate() + ", " + date.getFullYear() + "";
+            today = " " + getMonthName(today.getMonth()) + " " + today.getDate() + ", " + today.getFullYear() + "";
+
+            if(statusDate==today) {
+                return 'Today';
+            } else if(statusDate+1==today) {
+                return ' 1d ago';
+            } else if(statusDate+2==today) {
+                return ' 2d ago';
+            } else if(statusDate+3==today) {
+                return ' 3d ago';
+            } else if(statusDate+4==today) {
+                return ' 4d ago';
+            } else if(statusDate+5==today) {
+                return ' 5d ago';
+            } else if(statusDate+6==today) {
+                return ' 6d ago';
+            } else {
+                return statusDate;
+            }
+        }
+
+        function getTime(hours, minutes) {
+            var ampm;
+            if (hours < 12) {
+                ampm = 0;
+                if (hours == 0) {
+                    hours = 12;
+                }
+            } else {
+                ampm = 1;
+                if (hours > 12) {
+                    hours -= 12;
+                }
+            }
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            var result = "" + hours + ":" + minutes + ((ampm == 0) ? "AM" : "PM"); 
+            return result;
+        }
+      
+        $(function() {
+        var data = !{statuses};
+        drawGraphs(data)
+        $('#feedList').html('');
+        for (var i = 0; i < data.length; i++) {
+        var curr = data[i];
+        var date = new Date(curr.date);
+        var emotion = curr.emotion;
+        $('#feedList').append("<div class='feed_entries'>" + "<li class='emoticon'>"+"<img src='/imgs/" + getEmoticon(emotion) + "' />" + "</li>" + "<li class='entry_text'>" + curr.status + '<br> ' + "<span class='small'>" + curr.location + "<span class='date_format'>" + simpleDate(date) + "</span></li></div>");
+        if (curr.image != '' && curr.image != 'none') {
+            $('#feedList').append("<img src='" + curr.image + "' width=100%/>");
+            }
+        }
+        })
+        function switchView(id, hideId) {
+        document.getElementById(id).style.display = "block";
+        document.getElementById(hideId).style.display = "none";
+        }
+        function presentStatus() {
+        $.mobile.changePage("addStatus", { transition: "slideup"} );
+        }
+        function presentSettings() {
+        $.mobile.changePage("settings", {transition: "slide"} );
+        }
+      div(data-role='header', data-position='fixed', data-id='sameheader')
+        a#settings(data-icon='custom', onclick='presentSettings()') Settings
+        a#add(data-icon='custom', onclick='presentStatus()') Add
+        h1  emochi 
+      //
+         header 
+
+      center#viewToggle
+        div(data-role='navbar')
+          ul
+            li.ui-btn-active(onclick='switchView(\'displayPersonalFeed\', \'displayPersonalDashboard\')')
+              a.ui-btn-active.ui-state-persist(href='') Feed
+            li(onclick='switchView(\'displayPersonalDashboard\', \'displayPersonalFeed\')')
+              a(href='') Dashboard
+        //
+
+      //
+         viewToggle 
+      div
+        #displayPersonalFeed
+          ul#feedList(data-role='listview')
+        //
+           displayPersonalFeed 
+        #displayPersonalDashboard
+          #top-personal-dashboard
+            #emotion-graph
+            table#emotion-stats
+              tr#emotion-stats-row2
+                td Excited
+                td Happy
+                td Neutral
+                td Sad
+                td Angry
+                td Wholesome
+                td Devilish
+                td Disappointed
+                td Laughing
+                td Surprised
+            //- #profile_name
+            //-   | Katherine Chen
+              #profile_settings
+                center
+                  a(data-role='button', onclick='presentSettings()') Settings
+          //- table#entry-stats
+          //-   tr
+          //-     td 12
+          //-     td 5
+          //-     td 1
+          //-   tr#entry-stats-row2
+          //-     td Entries
+          //-     td This Week
+          //-     td Today
+        //
+           content 
+        .nav-glyphish-example(data-role='footer', data-id='samefooter', data-position='fixed', data-tap-toggle='false')
+          .nav-glyphish-example(data-role='navbar', data-grid='a')
+            ul
+              li
+                a#personal.ui-btn-active(href='personal', data-icon='custom')
+              li
+                a#global(href='global', data-icon='custom')
+        //
+           footer 
+      //
+         page 

@@ -1,0 +1,51 @@
+!!! 5
+html
+  head
+    title emochi
+    meta(charset='utf-8')
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='apple-mobile-web-app-status-bar-style', content='black')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='/css/jquery.mobile-1.2.0.css')
+    link(rel='stylesheet', href='css/style.css')
+    link(rel='apple-touch-icon', href='appicon.png')
+    link(rel='apple-touch-startup-image', href='startup.png')
+    script(src='/js/jquery-1.8.2.min.js')
+    script(src='/js/jquery.mobile-1.2.0.js')
+    script(src='http://www.geoplugin.net/javascript.gp')
+    script(type='text/javascript')
+      function switchView(id, hideId) {
+      document.getElementById(id).style.display = "block";
+      document.getElementById(hideId).style.display = "none";
+      }
+      function presentStatus() {
+      $.mobile.changePage("addStatus", { transition: "slideup"} );
+      }
+      function presentSettings() {
+      $.mobile.changePage("settings", {transition: "slide"} );
+      }
+  body
+    div(data-role='page')#loginbody
+      div(data-role='content')
+        center
+         img(src='/imgs/emochi_login.png')
+         if (typeof(invalid) != 'undefined')
+           #loginError
+             small
+               font(color='red') The email or password you entered is incorrect.
+         else if (typeof(loggedout) != 'undefined') 
+           #loggedOut
+             small
+               font(color='white') You have been successfully logged out.
+        form#loginform(action='attempt-login', method='post')
+          input#email(type='text', name='email', placeholder='Email')
+          input#password(type='password', name='password', placeholder='Password')
+          input#loginbutton(type='submit', value='Login')
+        br
+        center#signuptext
+          | New to emochi? 
+          a(href='createProfile') Sign up now
+      //
+         /content 
+    //
+       /page 
